@@ -50,4 +50,12 @@ app.put('/products/:id', async (req, res) => {
     res.send(product)
 })
 
+app.delete('/products/:id', async (req,res) => {
+    const {id} = req.params;
+
+    const product = await Product.findByIdAndDelete(id);
+
+    res.send("Product deleted!")
+})
+
 app.listen(3000, console.log("DB conncected and server running"))
