@@ -12,18 +12,42 @@ app.get('/', (req, res) =>{
     res.send("Success")
 })
 
-app.get('/products', (req, res) => {
-    console.log("database connected")
+app.get('/products', async (req, res) => {
+    const products = await Product.find()
+    res.send(products)
+    
+    
 })
 
-app.post('/products', (req, res) =>{
+app.post('/new_products', async (req, res) => {
     const {category, name, description, price, stock} = req.body;
 
-    const products = new Product({category: category, name: name, description: description, price: price, stock: stock});
+    const products = await Product.create({category: category, name: name, description: description, price: price, stock: stock});
 
-    products.save()
+    // products.save()
     res.send(products)
 })
 
+app.get('/products/:id', async(req, res) => {
+    const {id} = req.params;
+    const product = await Product.findById(id);
+
+    res.send(product);
+})
+
+app.put('/products/:id', async (req, res) => {
+    const {id} = req.params;
+    const {category, name, description, price, stock} = req.body;
+
+    const product = await Product.findByIdAndUpdate(id, {
+        category: category,
+        name: name,
+        description: description,
+        price: price,
+        stock: stock
+    })
+
+    res.send(product)
+})
 
 app.listen(3000, console.log("DB conncected and server running"))
